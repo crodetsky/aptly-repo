@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
+echo "Configuring nginx repository."
+cp nginx.repo /etc/yum.repos.d/
+
 echo "Installing prerequisites"
-dnf -y install nginx gnupg2
+yum -y install nginx gnupg2
 
 echo "Installing Aptly"
 if [ ! -d /opt/aptly ]; then
@@ -18,7 +21,7 @@ cp nginx.conf /etc/nginx/nginx.conf
 cp default.conf /etc/nginx/conf.d/default.conf
 
 # Setup Signing Key
-GNUPGHOME=/opt/aptly/gpg
+export GNUPGHOME=/opt/aptly/gpg
 if [[ ! -d /opt/aptly/gpg/private-keys-v1.d/ ]] || [[ ! -f /opt/aptly/gpg/pubring.kbx ]]; then
   echo -n "Enter full name for GPG signing key: "
   read FULL_NAME
