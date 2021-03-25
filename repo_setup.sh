@@ -35,6 +35,18 @@ if [[ ! -d /opt/aptly/gpg/private-keys-v1.d/ ]] || [[ ! -f /opt/aptly/gpg/pubrin
 else
   echo "No need to generate the new GPG keypair"
 fi
+if [[ ! -d /opt/aptly/public ]] ||
+   [[ ! -f /opt/aptly/public/repo_signing.key ]] ||
+   [[ ! -f /opt/aptly/public/repo_signing.gpg ]]; then
+  echo "Export the GPG public keys"
+  mkdir -p /opt/aptly/public
+  # Export only all public keys,
+  # for export private keys use --export-secret-keys
+  gpg2 --export --armor > /opt/aptly/public/repo_signing.key
+  gpg2 --export > /opt/aptly/public/repo_signing.gpg
+else
+  echo "No need to export the GPG keys"
+fi
 
 # Mirror repository
 UPSTREAM_URL="http://raspbian.raspberrypi.org/raspbian/"
