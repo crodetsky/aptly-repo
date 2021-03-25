@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
 
 echo "Installing prerequisites"
-dnf -y install \
-  nginx \
-  gnupg2 \
+dnf -y install nginx gnupg2
 
 echo "Installing Aptly"
 if [ ! -d /opt/aptly ]; then
