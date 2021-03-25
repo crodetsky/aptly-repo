@@ -2,10 +2,8 @@
 
 echo "Installing prerequisites"
 dnf -y install \
-  git \
   nginx \
   gnupg2 \
-  graphviz
 
 echo "Installing Aptly"
 if [ ! -d /opt/aptly ]; then
@@ -15,9 +13,6 @@ semanage fcontext -a -t httpd_sys_content_t '/opt/aptly(/.*)?'
 restorecon -vvRF /opt/aptly
 tar zxf aptly_1.4.0_linux_amd64.tar.gz
 cp aptly_1.4.0_linux_amd64/* /opt/aptly
-
-echo "Cloning docker-aptly for setup scripts"
-git clone --depth 1 --branch v1.4.2 https://github.com/urpylka/docker-aptly
 
 echo "Copying configuration"
 cp aptly.conf /etc/aptly.conf
