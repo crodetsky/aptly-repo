@@ -69,7 +69,7 @@ DISTS=( buster )
 COMPONENTS=( main contrib non-free rpi )
 ARCH=armhf
 echo "Creating mirror of ${REPO} repository."
-gpg --no-default-keyring --keyring /opt/aptly/gpg/trustedkeys.gpg --keyserver pool.sks-keyservers.net --recv-keys 9165938D90FDDD2E
+gpg --no-default-keyring --keyring /opt/aptly/gpg/trustedkeys.gpg --keyserver hkp://pool.sks-keyservers.net:80 --recv-keys 9165938D90FDDD2E
 for dist in ${DISTS[@]}; do
   echo "Creating mirror of ${REPO}-${dist}"
   /opt/aptly/aptly mirror create \
