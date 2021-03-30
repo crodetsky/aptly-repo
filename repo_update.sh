@@ -6,7 +6,7 @@ REPO=raspbian
 DISTS=( buster )
 COMPONENTS=( main contrib non-free rpi )
 ARCH=armhf
-GNUPGHOME=/opt/aptly/gpg
+export GNUPGHOME=/opt/aptly/gpg
 echo "Creating mirror of ${REPO} repository."
 for dist in ${DISTS[@]}; do
   echo "Updating ${REPO} repository mirror.."

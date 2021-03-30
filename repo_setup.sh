@@ -9,6 +9,7 @@ yum -y install nginx gnupg2
 echo "Installing Aptly"
 if [ ! -d /opt/aptly ]; then
   mkdir -p /opt/aptly
+fi
 wget https://github.com/aptly-dev/aptly/releases/download/v1.4.0/aptly_1.4.0_linux_amd64.tar.gz
 semanage fcontext -a -t httpd_sys_content_t '/opt/aptly(/.*)?'
 restorecon -vvRF /opt/aptly
@@ -30,11 +31,21 @@ if [[ ! -d /opt/aptly/gpg/private-keys-v1.d/ ]] || [[ ! -f /opt/aptly/gpg/pubrin
   echo -n "Enter passphase: "
   read -s GPG_PASSPHRASE
   echo $GPG_PASSPHRASE > /etc/aptly.pass
-  echo "Generating the new GPG keypair."
+  cat >gpg_src <<EOF
+%echo Generating a default key
+Key-Type: default
+Subkey-Type: default
+Name-Real: ${FULL_NAME}
+Name-Email: ${EMAIL_ADDRESS}
+Expire-Date: 0
+Passphrase: ${GPG_PASSPHRASE}
+%commit
+%echo done
+EOF
   cp -a /dev/urandom /dev/random
   mkdir -p /opt/aptly/gpg
   chmod 600 /opt/aptly/gpg
-  gpg2 --batch --passphrase "${GPG_PASSPHRASE}" --quick-gen-key "${FULL_NAME} <${EMAIL_ADDRESS}>" default default 0
+  gpg2 --batch --gen-key gpg_src
 else
   echo "No need to generate the new GPG keypair"
 fi
@@ -98,3 +109,4 @@ echo "Cleaning up"
 rm aptly_1.4.0_linux_amd64.tar.gz
 rm -rf aptly_1.4.0_linux_amd64
 rm -rf docker-aptly
+rm -rf gpg_src
